@@ -24,6 +24,8 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+
+        //****************************************
         [HttpGet("get-students-with-grades")]
         public async Task<IActionResult> GetStudentsWithGrades()
         {
@@ -31,6 +33,12 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+        [HttpPost("get-fillter-students-with-grades")]
+        public async Task<IActionResult> GetSFiltertudentsWithGrades(GetFilterdStudentsRequest payload)
+        {
+            var students = await studentsServices.GetFilteredStudentsWithGradesAsync(payload);
+            return Ok(students);
+        }
     }
 
 }

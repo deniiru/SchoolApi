@@ -1,11 +1,13 @@
-﻿using School.Database.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using School.Database.Context;
-using Microsoft.EntityFrameworkCore;
+using School.Database.Dtos;
+using School.Database.Entities;
+using School.Database.QueryExtensions;
 
 
 namespace School.Database.Repositories
 {
-    public class StudentsRepository: BaseRepository<Student>
+    public class StudentsRepository : BaseRepository<Student>
     {
         public StudentsRepository(SchoolDatabaseContext context) : base(context)
         {
@@ -15,11 +17,11 @@ namespace School.Database.Repositories
 
         public async Task AddAsync(Student student)
         {
-          schoolDatabaseContext.Students.Add(student);
-           await schoolDatabaseContext.SaveChangesAsync();
+            schoolDatabaseContext.Students.Add(student);
+            await schoolDatabaseContext.SaveChangesAsync();
         }
 
-        public async Task<List<Student>> GetAllAsync ()
+        public async Task<List<Student>> GetAllAsync()
         {
             var result = await schoolDatabaseContext.Students
                 .Where(s => s.DeletedAt == null)
@@ -54,6 +56,33 @@ namespace School.Database.Repositories
                 .OrderBy(s => s.LastName)
                 .ToListAsync();
         }
+
+        public async Task<List<Student>> GetAllWithGradesAsync(StudentsFilteringDto filters, StudentsSortingDto sortingOption)
+        {
+            var students = await schoolDatabaseContext.Students
+             .Include(s => s.Grades)
+             .Where(s => s.DeletedAt == null)
+
+             .Where(s => string.IsNullOrEmpty(filters.SearchValue) ||
+                         s.FirstName.ToLower().Contains(filters.SearchValue.ToLower()) ||
+                         s.LastName.ToLower().Contains(filters.SearchValue.ToLower()))
+
+             .Where(s => filters.DateRange == null ||
+                         s.Grades.Any(g =>
+                             (!filters.DateRange.LowerGrade.HasValue || g.Score >= filters.DateRange.LowerGrade.Value) &&
+                             (!filters.DateRange.UpperGrade.HasValue || g.Score <= filters.DateRange.UpperGrade.Value)))
+
+             .SortBy(sortingOption)
+
+             .Skip(filters.Skip)
+             .Take(filters.Take)
+
+             .AsNoTracking()
+             .ToListAsync();
+
+            return students;
+        }
+
 
     }
 }

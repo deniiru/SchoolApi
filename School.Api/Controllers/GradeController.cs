@@ -2,6 +2,8 @@
 using School.Core.Services;
 using School.Core.Dtos.Requests.Grades;
 using School.Core.Dtos.Requests.Students;
+using School.Database.Context;
+using School.Core.Dtos.Common.Grades;
 
 namespace School.Api.Controllers
 {
@@ -22,6 +24,19 @@ namespace School.Api.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudent(int id, [FromBody] UpdateGradeRequest request)
+        {
+
+            request.Id = id;
+            await gradesServices.UpdateGradeAsync(request);
+            return Ok($"Grade added successfully.");
+
+        }
+
+
 
         [HttpGet("get-grades")]
         public async Task<IActionResult> GetGrades()

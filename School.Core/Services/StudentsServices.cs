@@ -105,5 +105,18 @@ namespace School.Core.Services
 
             return result;
         }
+
+
+
+        public async Task<GetStudentsGradesResponse> GetFilteredStudentsWithGradesAsync(GetFilterdStudentsRequest payload)
+        {
+            var students = await studentsRepository.GetAllWithGradesAsync(payload.Filters, payload.SortingOption);
+
+            var result = new GetStudentsGradesResponse();
+
+            result.Students = students.ToStudentDto();
+
+            return result;
+        }
     }
 }
