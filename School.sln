@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "School.Database", "School.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "School.Infrastructure", "School.Infastructure\School.Infrastructure.csproj", "{C2119595-939F-4CFD-B7D7-83F3735D448E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "School.Infrastructure", "School.Infrastructure\School.Infrastructure.csproj", "{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{C2119595-939F-4CFD-B7D7-83F3735D448E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2119595-939F-4CFD-B7D7-83F3735D448E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2119595-939F-4CFD-B7D7-83F3735D448E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +44,6 @@ Global
 		{E639A8D3-3911-456C-B238-8D5B05229BBD} = {94487CE8-9640-4C79-ADAC-766069FF8B0E}
 		{00626B88-98FD-4059-92E7-A72A87C81074} = {94487CE8-9640-4C79-ADAC-766069FF8B0E}
 		{C2119595-939F-4CFD-B7D7-83F3735D448E} = {94487CE8-9640-4C79-ADAC-766069FF8B0E}
-		{1EA9989F-5A9E-0ABA-7859-2A9376F19AD0} = {94487CE8-9640-4C79-ADAC-766069FF8B0E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7DACB247-33AA-45DB-928E-61202B999CB0}
