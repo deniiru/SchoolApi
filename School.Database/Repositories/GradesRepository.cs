@@ -35,5 +35,21 @@ namespace School.Database.Repositories
 
             return results;
         }
+
+        public async Task<Grade?> GetByIdAsync(int id)
+        {
+            return await schoolDatabaseContext.Grades
+                .FirstOrDefaultAsync(g => g.Id == id && g.DeletedAt == null);
+        }
+
+        public async Task UpdateAsync(Grade entity)
+        {
+            entity.ModifiedAt= DateTime.UtcNow; // Set updated timestamp
+
+            schoolDatabaseContext.Grades.Update(entity);
+            await SaveChangesAsync();
+        }
+
+
     }
 }

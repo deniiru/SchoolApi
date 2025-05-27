@@ -35,6 +35,29 @@ namespace School.Core.Services
             await gradesRepository.AddAsync(newEvent);
         }
 
+        public async Task UpdateGradeAsync(UpdateGradeRequest request)
+        {
+           
+            var grade = await gradesRepository.GetByIdAsync(request.Id);
+            if (grade == null)
+            {
+                throw new Exception($"Grade with ID {request.Id} not found.");
+            }
+
+            var student = await studentsServices.GetStudentByIdAsync(request.StudentId);
+            if (student == null)
+            {
+                throw new Exception($"Student with ID {request.StudentId} not found.");
+            }
+
+            grade.Subject = request.Subject;
+            grade.Score = request.Score;
+            grade.StudentId = request.StudentId;
+
+            
+            await gradesRepository.UpdateAsync(grade);
+        }
+
         public async Task<GetGradesResponse> GetAllGradesAsync()
         {
             var grades = await gradesRepository.GetAllAsync();
