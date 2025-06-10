@@ -10,7 +10,7 @@ namespace School.Core.Dtos.Common.Grades
     {
         public int Id { get; set; }
         public int StudentId { get; set; }
-        public string Subject { get; set; } = string.Empty;
+        public int SubjectId { get; set; }
         public double Score { get; set; }
      
     }

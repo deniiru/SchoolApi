@@ -97,7 +97,7 @@ namespace School.Core.Services
                     {
                         Id = g.Id,
                         StudentId = g.StudentId,
-                        Subject = g.Subject,
+                        SubjectId = g.SubjectId,
                         Score = g.Score
                     }).ToList()
 

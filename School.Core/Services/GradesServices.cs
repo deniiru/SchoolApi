@@ -50,7 +50,7 @@ namespace School.Core.Services
                 throw new Exception($"Student with ID {request.StudentId} not found.");
             }
 
-            grade.Subject = request.Subject;
+            grade.SubjectId = request.SubjectId;
             grade.Score = request.Score;
             grade.StudentId = request.StudentId;
 
@@ -67,7 +67,7 @@ namespace School.Core.Services
                 {
                     Id = g.Id,
                     StudentId = g.StudentId,
-                    Subject = g.Subject,
+                    SubjectId = g.SubjectId,
                     Score = g.Score,
                 }).ToList();
             return result;

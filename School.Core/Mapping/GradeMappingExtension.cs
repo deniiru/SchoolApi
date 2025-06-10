@@ -11,7 +11,7 @@ namespace School.Core.Mapping
         public static Grade ToEntity(this AddGradeRequest payload)
         {
             var grade = new Grade();
-            grade.Subject = payload.Subject;
+            grade.SubjectId = payload.SubjectId;
             grade.Score = payload.Score;
             grade.StudentId = payload.StudentId;
             return grade;
@@ -24,7 +24,7 @@ namespace School.Core.Mapping
             return new GradeDto
             {
                 Id = grade.Id,
-                Subject = grade.Subject,
+                SubjectId = grade.SubjectId,
                 Score = grade.Score
             };
         }

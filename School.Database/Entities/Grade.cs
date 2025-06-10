@@ -8,13 +8,14 @@ namespace School.Database.Entities
 {
     public class Grade: BaseEntity
     {
-        public string? Subject { get; set; }
         public double Score { get; set; }
 
         // Foreign key
+        public int SubjectId { get; set; }
         public int StudentId { get; set; }
 
         // Navigation property
+        public Subject Subject { get; set; }
         public Student Student { get; set; }
     }
 }
