@@ -11,10 +11,11 @@ namespace School.Database.Repositories
         public BaseRepository(SchoolDatabaseContext schoolDatabaseContext)
         {
             this.schoolDatabaseContext = schoolDatabaseContext;
+            DbSet = schoolDatabaseContext.Set<T>();
         }
 
 
-        private DbSet<T> DbSet { get; }
+        private DbSet<T> DbSet;
 
         public Task<List<T>> GetAllAsync(bool includeDeletedEntities = false)
         {

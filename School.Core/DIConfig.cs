@@ -9,6 +9,8 @@ namespace School.Core
         {
              services.AddScoped<StudentsServices>();
             services.AddScoped<GradesServices>();
+            services.AddScoped<GroupsServices>();
+            services.AddScoped<MajorsServices>();
             return services;
         }
     }

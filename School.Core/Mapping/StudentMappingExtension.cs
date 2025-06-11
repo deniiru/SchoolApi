@@ -14,7 +14,8 @@ namespace School.Core.Mapping
             return new Student
             {
                 FirstName = payload.FirstName,
-                LastName = payload.LastName
+                LastName = payload.LastName,
+                GroupId = payload.GroupId,
             };
         }
 

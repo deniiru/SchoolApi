@@ -21,6 +21,7 @@ namespace School.Core.Services
 
         public async Task AddStudentAsync(AddStudentRequest payload)
         {
+            // find the group iD
             var newStudent = payload.ToEntity();
             newStudent.CreatedAt = DateTime.UtcNow;
 

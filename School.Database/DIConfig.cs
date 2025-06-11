@@ -13,6 +13,8 @@ namespace School.Database
             services.AddScoped<DbContext, SchoolDatabaseContext>();
             services.AddScoped<StudentsRepository>();
             services.AddScoped<GradesRepository>();
+            services.AddScoped<GroupsRepository>();
+            services.AddScoped<MajorsRepository>();
 
             return services;
         }
