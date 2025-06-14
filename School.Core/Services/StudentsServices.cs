@@ -12,21 +12,20 @@ namespace School.Core.Services
     public class StudentsServices
     {
         private readonly StudentsRepository studentsRepository;
+     
 
         public StudentsServices(StudentsRepository studentsRepository)
         {
             this.studentsRepository = studentsRepository;
-            Console.WriteLine("StudentsServices initialized");
         }
 
         public async Task AddStudentAsync(AddStudentRequest payload)
         {
-            // find the group iD
             var newStudent = payload.ToEntity();
             newStudent.CreatedAt = DateTime.UtcNow;
 
-            await studentsRepository.AddAsync(newStudent);
-            Console.WriteLine($"Student {payload.FirstName} added successfully.");
+            studentsRepository.Insert(newStudent);
+            await studentsRepository.SaveChangesAsync();
         }
 
         public async Task<GetStudentsResponse> GetAllStudentsAsync()

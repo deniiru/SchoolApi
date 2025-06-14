@@ -15,6 +15,7 @@ namespace School.Database
             services.AddScoped<GradesRepository>();
             services.AddScoped<GroupsRepository>();
             services.AddScoped<MajorsRepository>();
+            services.AddScoped<TeachersRepository>();
 
             return services;
         }

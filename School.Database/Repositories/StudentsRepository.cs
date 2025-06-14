@@ -15,12 +15,6 @@ namespace School.Database.Repositories
             Console.WriteLine("StudentsRepository initialized");
         }
 
-        public async Task AddAsync(Student student)
-        {
-            schoolDatabaseContext.Students.Add(student);
-            await schoolDatabaseContext.SaveChangesAsync();
-        }
-
         public async Task<List<Student>> GetAllAsync()
         {
             var result = await schoolDatabaseContext.Students
