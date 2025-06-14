@@ -13,7 +13,6 @@ namespace School.Core.Services
 
             teachersRepository.Insert(newTeacher);
             await teachersRepository.SaveChangesAsync();
-
         }
     }
 }

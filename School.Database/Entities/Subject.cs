@@ -14,7 +14,7 @@ namespace School.Database.Entities
         public int TeacherId { get; set; }
         public Teacher Teacher { get; set; }
 
-        public YearEnum An { get; set; }
+        public YearEnum Year { get; set; }
 
         public int MajorId { get; set; }
         public Major Major { get; set; }

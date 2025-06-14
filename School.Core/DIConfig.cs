@@ -12,6 +12,7 @@ namespace School.Core
             services.AddScoped<GroupsServices>();
             services.AddScoped<MajorsServices>();
             services.AddScoped<TeachersServices>();
+            services.AddScoped<SubjectsServices>();
             return services;
         }
     }
