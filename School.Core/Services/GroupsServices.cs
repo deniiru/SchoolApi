@@ -14,10 +14,11 @@ namespace School.Core.Services
     public class GroupsServices
     {
         private readonly GroupsRepository groupsRepository;
-        public GroupsServices(GroupsRepository groupsRepository)
+        private readonly StudentsRepository studentsRepository;
+        public GroupsServices(GroupsRepository groupsRepository, StudentsRepository studentsRepository)
         {
             this.groupsRepository = groupsRepository;
-            Console.WriteLine("StudentsServices initialized");
+            this.studentsRepository = studentsRepository;
         }
 
         public async Task AddGroupAsync (AddGroupRequest payload)
@@ -37,6 +38,11 @@ namespace School.Core.Services
                 throw new Exception($"Group with ID {payload.Id} was not found.");
             }
 
+            var Students = await studentsRepository.GetAllByGroupAsync(group.Id);
+            foreach (var student in Students)
+            {
+                await studentsRepository.SoftDeleteAsync(student);
+            }
             await groupsRepository.SoftDeleteAsync(group);
         }
     }

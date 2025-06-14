@@ -13,10 +13,13 @@ namespace School.Core.Services
     public class MajorsServices
     {
         private readonly MajorsRepository majorRepository;
+        private readonly GroupsRepository groupsRepository;
+        private readonly SubjectsRepository subjectsRepository;
 
-        public MajorsServices( MajorsRepository majorsRepository)
+        public MajorsServices( MajorsRepository majorsRepository, GroupsRepository groupsRepository)
         {
             this.majorRepository = majorsRepository;
+            this.groupsRepository = groupsRepository;
         }
 
         public async Task AddMajorAsync (AddMajorRequest payload)
@@ -32,6 +35,20 @@ namespace School.Core.Services
             if(major == null)
             {
                 throw new Exception($"Major with ID {payload.Id} was not found.");
+            }
+
+            var gropus = await groupsRepository.GetAllByMajorIdAsync(major.Id);
+
+            foreach (var group in gropus)
+            {
+                await groupsRepository.SoftDeleteAsync(group);
+            }
+
+            var subjects = await subjectsRepository.GetAllByMajorIdAsync(major.Id);
+
+            foreach(var subject in subjects)
+            {
+                await subjectsRepository.SoftDeleteAsync(subject);
             }
 
             await majorRepository.SoftDeleteAsync(major);

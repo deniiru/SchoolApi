@@ -13,11 +13,13 @@ namespace School.Core.Services
     public class StudentsServices
     {
         private readonly StudentsRepository studentsRepository;
+        private readonly GradesRepository gradesRepository; 
 
-        public StudentsServices(StudentsRepository studentsRepository)
+        public StudentsServices(StudentsRepository studentsRepository, GradesRepository gradesRepository)
         {
             this.studentsRepository = studentsRepository;
             Console.WriteLine("StudentsServices initialized");
+            this.gradesRepository = gradesRepository;
         }
 
         public async Task AddStudentAsync(AddStudentRequest payload)
@@ -128,6 +130,12 @@ namespace School.Core.Services
             if (student == null)
             {
                 throw new Exception($"Student with ID {payload.Id} was not found.");
+            }
+
+            var grades = await gradesRepository.GetByStudentIdAsync(student.Id);
+            foreach (var grade in grades)
+            {
+                await gradesRepository.SoftDeleteAsync(grade);
             }
 
             await studentsRepository.SoftDeleteAsync(student);

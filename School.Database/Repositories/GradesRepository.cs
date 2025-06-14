@@ -56,6 +56,14 @@ namespace School.Database.Repositories
             await SaveChangesAsync();
         }
 
+        public async Task<List<Grade>> GetByStudentIdAsync(int id)
+        {
+            return await schoolDatabaseContext.Grades.Where(g => g.StudentId == id).ToListAsync();
+        }
 
+        public async Task<List<Grade>> GetBySubjectIdAsync(int id)
+        {
+            return await schoolDatabaseContext.Grades.Where(g => g.SubjectId == id).ToListAsync();
+        }
     }
 }

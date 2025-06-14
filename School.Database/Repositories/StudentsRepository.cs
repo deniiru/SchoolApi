@@ -87,5 +87,13 @@ namespace School.Database.Repositories
             student.DeletedAt = DateTime.Now;
             await SaveChangesAsync();
         }
+
+        public async Task<List<Student>> GetAllByGroupAsync(int id)
+        {
+            var students = await schoolDatabaseContext.Students
+                .Where(s => s.GroupId == id).ToListAsync();
+
+            return students;
+        }
     }
 }
