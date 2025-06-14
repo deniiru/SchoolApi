@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using School.Core.Dtos.Requests.Students;
 using School.Core.Services;
-using School.Core.Dtos.Requests.Students;
 using System.Runtime.CompilerServices;
+using School.Core.Dtos.Delete;
 
 namespace School.Api.Controllers
 {
@@ -24,6 +24,19 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+        [HttpDelete("delete-student")]
+        public async Task<IActionResult> DeleteStudent(DeletePayload payload)
+        {
+            try
+            {
+                await studentsServices.DeleteStudentAsync(payload);
+                return Ok($"Student removed successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
 
         //****************************************
         [HttpGet("get-students-with-grades")]

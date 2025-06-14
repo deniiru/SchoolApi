@@ -1,5 +1,6 @@
 ﻿using School.Core.Dtos.Common.Grades;
 using School.Core.Dtos.Common.Students;
+using School.Core.Dtos.Delete;
 using School.Core.Dtos.Requests.Students;
 using School.Core.Dtos.Responses.Students;
 using School.Core.Mapping;
@@ -12,20 +13,21 @@ namespace School.Core.Services
     public class StudentsServices
     {
         private readonly StudentsRepository studentsRepository;
-     
 
         public StudentsServices(StudentsRepository studentsRepository)
         {
             this.studentsRepository = studentsRepository;
+            Console.WriteLine("StudentsServices initialized");
         }
 
         public async Task AddStudentAsync(AddStudentRequest payload)
         {
+            // find the group iD
             var newStudent = payload.ToEntity();
             newStudent.CreatedAt = DateTime.UtcNow;
 
-            studentsRepository.Insert(newStudent);
-            await studentsRepository.SaveChangesAsync();
+            await studentsRepository.AddAsync(newStudent);
+            Console.WriteLine($"Student {payload.FirstName} added successfully.");
         }
 
         public async Task<GetStudentsResponse> GetAllStudentsAsync()
@@ -117,6 +119,18 @@ namespace School.Core.Services
             result.Students = students.ToStudentDto();
 
             return result;
+        }
+
+        public async Task DeleteStudentAsync(DeletePayload payload)
+        {
+            var student = studentsRepository.GetByIdAsync(payload.Id).Result;
+
+            if (student == null)
+            {
+                throw new Exception($"Student with ID {payload.Id} was not found.");
+            }
+
+            await studentsRepository.SoftDeleteAsync(student);
         }
     }
 }

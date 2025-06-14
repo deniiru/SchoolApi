@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using School.Core.Dtos.Requests.Majors;
 using School.Core.Services;
+using School.Core.Dtos.Delete;
 
 namespace School.Api.Controllers
 {
@@ -13,6 +14,20 @@ namespace School.Api.Controllers
         {
             await majorsServices.AddMajorAsync(payload);
             return Ok();
+        }
+
+        [HttpDelete("delete-major")]
+        public async Task<IActionResult> DeleteMajor(DeletePayload payload)
+        {
+            try
+            {
+                await majorsServices.DeleteMajorAsync(payload);
+                return Ok($"Major removed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
         }
 
     }

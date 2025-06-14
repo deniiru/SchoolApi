@@ -45,7 +45,7 @@ namespace School.Core.Services
                 throw new Exception($"Grade with ID {payload.Id} not found.");
             }
 
-            gradesRepository.SoftDelete(grade);
+            await gradesRepository.SoftDeleteAsync(grade);
         }
 
         public async Task UpdateGradeAsync(UpdateGradeRequest request)

@@ -4,6 +4,7 @@ using School.Core.Dtos.Requests.Grades;
 using School.Core.Dtos.Requests.Students;
 using School.Database.Context;
 using School.Core.Dtos.Common.Grades;
+using School.Core.Dtos.Delete;
 
 namespace School.Api.Controllers
 {
@@ -26,11 +27,11 @@ namespace School.Api.Controllers
         }
 
         [HttpDelete("delete-grade")]
-        public async Task<IActionResult> DeleteGrade(int gradeId)
+        public async Task<IActionResult> DeleteGrade(DeletePayload payload)
         {
             try
             {
-                await gradesServices.DeleteGradeAsync(gradeId);
+                await gradesServices.DeleteGradeAsync(payload);
                 return Ok($"Grade removed successfully");
             }
             catch (Exception ex)

@@ -36,6 +36,12 @@ namespace School.Database.Repositories
             return results;
         }
 
+        public async Task SoftDeleteAsync(Grade g)
+        {
+            g.DeletedAt = DateTime.UtcNow;
+            await SaveChangesAsync();
+        }
+
         public async Task<Grade?> GetByIdAsync(int id)
         {
             return await schoolDatabaseContext.Grades

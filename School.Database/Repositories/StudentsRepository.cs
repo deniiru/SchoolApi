@@ -4,7 +4,6 @@ using School.Database.Dtos;
 using School.Database.Entities;
 using School.Database.QueryExtensions;
 
-
 namespace School.Database.Repositories
 {
     public class StudentsRepository : BaseRepository<Student>
@@ -13,6 +12,12 @@ namespace School.Database.Repositories
         {
             this.schoolDatabaseContext = context;
             Console.WriteLine("StudentsRepository initialized");
+        }
+
+        public async Task AddAsync(Student student)
+        {
+            schoolDatabaseContext.Students.Add(student);
+            await schoolDatabaseContext.SaveChangesAsync();
         }
 
         public async Task<List<Student>> GetAllAsync()
@@ -77,6 +82,10 @@ namespace School.Database.Repositories
             return students;
         }
 
-
+        public async Task SoftDeleteAsync(Student student)
+        {
+            student.DeletedAt = DateTime.Now;
+            await SaveChangesAsync();
+        }
     }
 }

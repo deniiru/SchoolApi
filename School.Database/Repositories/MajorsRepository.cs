@@ -16,5 +16,11 @@ namespace School.Database.Repositories
             schoolDatabaseContext.Major.Add(major);
             await schoolDatabaseContext.SaveChangesAsync();
         }
+
+        public async Task SoftDeleteAsync(Major major)
+        {
+            major.DeletedAt = DateTime.Now;
+            await schoolDatabaseContext.SaveChangesAsync();
+        }
     }
 }
