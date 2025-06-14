@@ -25,6 +25,20 @@ namespace School.Api.Controllers
             }
         }
 
+        [HttpDelete("delete-grade")]
+        public async Task<IActionResult> DeleteGrade(int gradeId)
+        {
+            try
+            {
+                await gradesServices.DeleteGradeAsync(gradeId);
+                return Ok($"Grade removed successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] UpdateGradeRequest request)
@@ -51,6 +65,7 @@ namespace School.Api.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
         [HttpGet("get-student-grades")]
         public async Task<IActionResult> GetStudentGrades([FromBody] AddStudentRequest payload)
         {

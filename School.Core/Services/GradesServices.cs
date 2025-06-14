@@ -4,6 +4,7 @@ using School.Core.Dtos.Responses.Grades;
 using School.Core.Dtos.Common.Grades;
 using School.Core.Mapping;
 using School.Core.Dtos.Requests.Students;
+using School.Core.Dtos.Delete;
 
 namespace School.Core.Services
 {
@@ -33,6 +34,18 @@ namespace School.Core.Services
             newEvent.CreatedAt = DateTime.UtcNow;
 
             await gradesRepository.AddAsync(newEvent);
+        }
+
+        public async Task DeleteGradeAsync(DeletePayload payload)
+        {
+            var grade = await gradesRepository.GetByIdAsync(payload.Id);
+
+            if (grade == null) 
+            {
+                throw new Exception($"Grade with ID {payload.Id} not found.");
+            }
+
+            gradesRepository.SoftDelete(grade);
         }
 
         public async Task UpdateGradeAsync(UpdateGradeRequest request)
