@@ -10,10 +10,13 @@ namespace School.Core.Mapping
     {
         public static Grade ToEntity(this AddGradeRequest payload)
         {
-            var grade = new Grade();
-            grade.SubjectId = payload.SubjectId;
-            grade.Score = payload.Score;
-            grade.StudentId = payload.StudentId;
+            var grade = new Grade
+            {
+                Score = payload.Score,
+                StudentId = payload.StudentId,
+                SubjectId = payload.SubjectId,
+            };
+            grade.CreatedAt = DateTime.UtcNow;
             return grade;
         }
 

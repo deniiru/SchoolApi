@@ -10,12 +10,8 @@ using System.Threading.Tasks;
 
 namespace School.Database.Repositories
 {
-    public class GradesRepository : BaseRepository<Grade>
+    public class GradesRepository(SchoolDatabaseContext schoolDatabaseContext) : BaseRepository<Grade>(schoolDatabaseContext)
     {
-        public GradesRepository(SchoolDatabaseContext schoolDatabaseContext) : base(schoolDatabaseContext)
-        {
-            this.schoolDatabaseContext = schoolDatabaseContext;
-        }
 
         public async Task AddAsync(Grade entity)
         {
