@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using School.Core.Dtos.Requests.Students;
 using School.Core.Services;
-using System.Runtime.CompilerServices;
 using School.Core.Dtos.Delete;
+using School.Core.Dtos.Responses.Students;
 
 namespace School.Api.Controllers
 {
@@ -50,6 +50,20 @@ namespace School.Api.Controllers
         public async Task<IActionResult> GetSFiltertudentsWithGrades(GetFilterdStudentsRequest payload)
         {
             var students = await studentsServices.GetFilteredStudentsWithGradesAsync(payload);
+            return Ok(students);
+        }
+
+        [HttpPost("get-student-mean-in-subject")]
+        public async Task<IActionResult> GetStudentMeanInSubject(GetStudentMeanInSubjectRequest payload)
+        {
+            var mean = await studentsServices.GetStudentMeanInSubjectAsync(payload);
+            return Ok(mean);
+        }
+
+        [HttpPost("get-failures-in-subject")]//i know i am mean
+        public async Task<IActionResult> GetStudentsWhoFailedInSubject(GetStudentsWhoFailedInSubjectRequest payload)
+        {
+            var students = await studentsServices.GetAllStudentsWhoFailedInSubjectAsync(payload);
             return Ok(students);
         }
     }

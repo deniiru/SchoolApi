@@ -95,5 +95,11 @@ namespace School.Database.Repositories
 
             return students;
         }
+
+        public async Task<List<Grade>> GetAllGradesForStudentInSubjectAsync(int studentId, int subjectId)
+        {
+            return await schoolDatabaseContext.Grades
+                .Where(g => g.SubjectId == subjectId && g.StudentId == studentId).ToListAsync();
+        }
     }
 }

@@ -31,5 +31,13 @@ namespace School.Api.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
+        [HttpGet("get-teachers-with-subjects")]
+        public async Task<IActionResult> GetAllTeacherWithSubjects()
+        {
+            var teachers = await teachersServices.GetAllWithSubjectsAsync();
+            return Ok(teachers);
+        }
+
     }
 }

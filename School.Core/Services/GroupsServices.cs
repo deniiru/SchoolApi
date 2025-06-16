@@ -29,6 +29,20 @@ namespace School.Core.Services
             Console.WriteLine($"{payload.GroupName} added successfully.");
         }
 
+        public async Task AdvanceAllGroupsAsync()
+        {
+            var groups = await groupsRepository.GetAllAsync();
+            foreach (var group in groups)
+            {
+                if (group.An != Database.Enums.YearEnum.DoneWithCollege)
+                {
+                    group.An += 1;
+                }
+            }
+            groupsRepository.Update();
+            await groupsRepository.SaveChangesAsync ();
+        }
+
         public async Task DeleteGroupAsync(DeletePayload payload)
         {
             var group = groupsRepository.GetFirstOrDefaultAsync(payload.Id).Result;

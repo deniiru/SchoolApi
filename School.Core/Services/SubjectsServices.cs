@@ -32,5 +32,27 @@ namespace School.Core.Services
 
             await subjectsRepository.SoftDeleteAsync(subject);
         }
+
+        public async Task<double> GetSubjectMean(GetSubjectMeanRequest payload)
+        {
+            if(subjectsRepository.GetFirstOrDefaultAsync(payload.SubjectId).Result == null)
+            {
+                throw new Exception($"Subject with ID {payload.SubjectId} was not found.");
+            }
+
+            var grades = await gradesRepository.GetBySubjectIdAsync(payload.SubjectId);
+
+            if(grades.Count == 0)
+                throw new Exception($"Subject with ID {payload.SubjectId} has no grades assigned.");
+
+            double result = 0;
+
+            foreach (var grade in grades)
+            {
+                result += grade.Score;
+            }
+
+            return result / grades.Count;
+        }
     }
 }

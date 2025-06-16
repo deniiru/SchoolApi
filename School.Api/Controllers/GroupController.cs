@@ -31,5 +31,19 @@ namespace School.Api.Controllers
             }
         }
 
+        [HttpPatch("advance-groups")]
+        public async Task<IActionResult> AdvanceAllGroups()
+        {
+            try
+            {
+                await groupServices.AdvanceAllGroupsAsync();
+                return Ok($"Groups advanced with one year successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
     }
 }

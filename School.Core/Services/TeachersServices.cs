@@ -2,6 +2,7 @@
 using School.Core.Dtos.Requests.Teachers;
 using School.Core.Mapping;
 using School.Database.Repositories;
+using School.Core.Dtos.Responses.Teachers;
 
 namespace School.Core.Services
 {
@@ -33,6 +34,25 @@ namespace School.Core.Services
             }
 
             await teachersRepository.SoftDeleteAsync(teacher);
+        }
+
+        public async Task<List<GetTeacherWithSubjectResponse>> GetAllWithSubjectsAsync()
+        {
+            var subjects = await subjectsRepository.GetAllAsync();
+            
+            List<GetTeacherWithSubjectResponse> result = [];
+
+            foreach (var subject in subjects)
+            {
+                var teacher = await teachersRepository.GetFirstOrDefaultAsync(subject.TeacherId);
+                if(teacher == null)
+                {
+                    throw (new Exception($"Invalid database entry, no teacher with ID {subject.TeacherId} was found."));
+                }
+                result.Add(new GetTeacherWithSubjectResponse(teacher.FirstName, teacher.LastName, subject.Name));
+            }
+
+            return result;
         }
     }
 }

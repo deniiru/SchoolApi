@@ -13,13 +13,15 @@ namespace School.Core.Services
     public class StudentsServices
     {
         private readonly StudentsRepository studentsRepository;
-        private readonly GradesRepository gradesRepository; 
+        private readonly GradesRepository gradesRepository;
+        private readonly SubjectsRepository subjectRepository;
 
-        public StudentsServices(StudentsRepository studentsRepository, GradesRepository gradesRepository)
+        public StudentsServices(StudentsRepository studentsRepository, GradesRepository gradesRepository, SubjectsRepository subjectsRepository)
         {
             this.studentsRepository = studentsRepository;
             Console.WriteLine("StudentsServices initialized");
             this.gradesRepository = gradesRepository;
+            this.subjectRepository = subjectsRepository;
         }
 
         public async Task AddStudentAsync(AddStudentRequest payload)
@@ -139,6 +141,67 @@ namespace School.Core.Services
             }
 
             await studentsRepository.SoftDeleteAsync(student);
+        }
+
+        public async Task<double> GetStudentMeanInSubjectAsync(GetStudentMeanInSubjectRequest payload)
+        {
+            if(await studentsRepository.GetByIdAsync(payload.StudentId) == null)
+            {
+                throw new Exception($"Student with ID {payload.StudentId} was not found.");
+            }
+
+            var grades = await studentsRepository.GetAllGradesForStudentInSubjectAsync(payload.StudentId, payload.SubjectId);
+
+            if(grades.Count == 0)
+            {
+                throw new Exception($"Student with ID {payload.StudentId} has no grades in subject with ID {payload.SubjectId}.");
+            }
+
+            double sum = 0;
+
+            foreach(var grade in grades)
+            {
+                sum += grade.Score;
+            }
+
+            var result = sum / grades.Count();
+
+            return result;
+        }
+
+        public async Task<List<GetStudentsWhoFailedInSubjectResponse>> GetAllStudentsWhoFailedInSubjectAsync(GetStudentsWhoFailedInSubjectRequest payload)
+        {
+            if(await subjectRepository.GetFirstOrDefaultAsync(payload.SubjectId) == null)
+            {
+                throw new Exception($"Subject with ID {payload.SubjectId} was not found.");
+            }
+
+            var students = await studentsRepository.GetAllAsync();
+            List<GetStudentsWhoFailedInSubjectResponse> result = [];
+
+            foreach (var student in students)
+            {
+                var grades = await studentsRepository.GetAllGradesForStudentInSubjectAsync(student.Id, payload.SubjectId);
+                if (grades.Count == 0)
+                {
+                    continue;
+                }
+
+                double mean = 0;
+                foreach (var grade in grades)
+                {
+                    mean += grade.Score;
+                }
+
+                mean /= grades.Count();
+
+                if(mean < 5)
+                {
+                    result.Add(new GetStudentsWhoFailedInSubjectResponse(student.FirstName, student.LastName, mean));
+                }
+            }
+
+            return result;
         }
     }
 }

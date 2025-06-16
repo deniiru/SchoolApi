@@ -16,13 +16,27 @@ namespace School.Api.Controllers
             return Ok();
         }
 
-    [HttpDelete("delete-subject")]
+        [HttpDelete("delete-subject")]
         public async Task<IActionResult> DeleteSubject(DeletePayload payload)
         {
             try
             {
                 await subjectsServices.DeleteSubjectAsync(payload);
                 return Ok($"Student removed successfully");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("get-subject-mean")]
+        public async Task<IActionResult> GetSubjectMean(GetSubjectMeanRequest payload)
+        {
+            try
+            {
+                var mean = await subjectsServices.GetSubjectMean(payload);
+                return Ok(mean);
             }
             catch (Exception ex)
             {
