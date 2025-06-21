@@ -22,5 +22,13 @@ namespace School.Database.Repositories
             group.DeletedAt = DateTime.Now;
             await schoolDatabaseContext.SaveChangesAsync();
         }
+
+        public async Task<Group?> GetByIdAsync(int id)
+        {
+            return await schoolDatabaseContext.Groups
+                .Where(g => g.DeletedAt == null && g.Id == id)
+                .FirstOrDefaultAsync(); 
+        }
+
     }
 }

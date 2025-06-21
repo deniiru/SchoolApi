@@ -3,6 +3,7 @@ using School.Core.Dtos.Requests.Students;
 using School.Core.Dtos.Requests.Groups;
 using School.Core.Services;
 using School.Core.Dtos.Delete;
+using School.Infrastructure.Exceptions;
 
 namespace School.Api.Controllers
 {
@@ -45,5 +46,19 @@ namespace School.Api.Controllers
             }
         }
 
+
+        [HttpGet("{groupId}/students")]
+        public async Task<IActionResult> GetGroupStundent([FromRoute] int groupId)
+        {
+            try
+            {
+                var students = await groupServices.GetGroupStudentsAsync(groupId);
+                return Ok(students);
+            }
+            catch (WrongInputException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

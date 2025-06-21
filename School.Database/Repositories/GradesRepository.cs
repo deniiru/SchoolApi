@@ -26,7 +26,6 @@ namespace School.Database.Repositories
 
                 .OrderBy(g => g.Subject)
 
-                //.AsNoTracking()
                 .ToListAsync();
 
             return results;
