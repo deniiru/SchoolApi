@@ -2,6 +2,7 @@
 using School.Core.Dtos.Common.Students;
 using School.Core.Dtos.Delete;
 using School.Core.Dtos.Requests.Students;
+using School.Core.Dtos.Responses.Grades;
 using School.Core.Dtos.Responses.Students;
 using School.Core.Mapping;
 using School.Database.Entities;
@@ -247,6 +248,26 @@ namespace School.Core.Services
 
             student.GroupId = group.Id;
             await studentsRepository.SaveChangesAsync();
+        }
+
+        public async Task<GetGradesResponse> GetStudentGradesAsync (int id, GetFilterdStudentGradesRequest payload)
+        {
+            var student = await studentsRepository.GetByIdAsync(id);
+            if (student == null)
+                throw new WrongInputException("Id not found");
+
+            var grades = new GetGradesResponse();
+            var results = await gradesRepository.GetByStudentIdFilteredAsync(id, payload.Filters, payload.SortingOption);
+
+            grades.Grades = results.Select(g => new GradeDto 
+            {
+                Id = g.Id,
+                StudentId = g.StudentId,
+                SubjectId = g.SubjectId,
+                Score = g.Score,
+            }
+            ).ToList();
+            return grades;
         }
     }
 }

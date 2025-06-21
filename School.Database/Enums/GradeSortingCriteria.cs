@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace School.Database.Enums
 {
-    public enum StudentsSortingCriteria
+    public enum GradeSortingCriteria
     {
-        FirstName = 1,
-        LastName = 2,
+        Subject = 1,
+        Score = 2,
     }
 }

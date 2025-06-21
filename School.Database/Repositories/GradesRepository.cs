@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using School.Database.Context;
+using School.Database.Dtos;
 using School.Database.Entities;
+using School.Database.Enums;
+using School.Database.QueryExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +57,28 @@ namespace School.Database.Repositories
         public async Task<List<Grade>> GetByStudentIdAsync(int id)
         {
             return await schoolDatabaseContext.Grades.Where(g => g.StudentId == id).ToListAsync();
+        }
+
+        public async Task<List<Grade>> GetByStudentIdFilteredAsync (int idStudent, GradesFilteringDto filters, GradesSortingDto sortingOption)
+        {
+
+            var grades = schoolDatabaseContext.Grades
+              .Include(g => g.Subject)
+              .Where(g => g.DeletedAt == null && g.StudentId ==idStudent)
+              .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filters.Subject) && filters.Subject != "string")
+                grades = grades.Where(s => s.Subject.Name == filters.Subject);
+
+            if (filters.Year != YearEnum.None)
+                grades = grades.Where(g => g.Subject.Year == filters.Year);
+
+            grades = grades
+                .Skip(filters.Skip)
+                .Take(filters.Take)
+                .SortBy(sortingOption);
+
+            return await grades.ToListAsync();
         }
 
         public async Task<List<Grade>> GetBySubjectIdAsync(int id)

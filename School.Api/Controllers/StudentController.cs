@@ -49,7 +49,7 @@ namespace School.Api.Controllers
                 await studentsServices.UpdateStudentAsync(id, payload);
                 return Ok();
             }
-            catch(WrongInputException ex)
+            catch (WrongInputException ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -88,7 +88,7 @@ namespace School.Api.Controllers
         //}
 
         [HttpPost("get-students-filtered")]
-        public async Task<IActionResult> GetStudentsFiltered (GetFilterdStudentsRequest payload)
+        public async Task<IActionResult> GetStudentsFiltered(GetFilterdStudentsRequest payload)
         {
             var students = await studentsServices.GetFilterStudentsAsync(payload);
             return Ok(students);
@@ -106,6 +106,13 @@ namespace School.Api.Controllers
         {
             var students = await studentsServices.GetAllStudentsWhoFailedInSubjectAsync(payload);
             return Ok(students);
+        }
+
+        [HttpPost("{idStudent}/grades")]
+        public async Task<IActionResult> GetStudentGrades([FromRoute] int idStudent, [FromBody] GetFilterdStudentGradesRequest payload)
+        {
+            var grades = await studentsServices.GetStudentGradesAsync(idStudent, payload);
+            return Ok(grades);
         }
     }
 
