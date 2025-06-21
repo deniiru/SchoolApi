@@ -132,6 +132,24 @@ namespace School.Api.Controllers
                 return BadRequest(ex.Message);  
             }
         }
+
+        [HttpPost("{idStudent}/subjects-grade")]
+        public async Task<IActionResult> GetStudentGradesPerSubjects([FromRoute] int idStudent)
+        {
+            try
+            {
+                var grades = await studentsServices.GetStudentFinalGradesAsync(idStudent);
+                return Ok(grades);
+            }
+            catch (WrongInputException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ResourceMissingException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 
 }

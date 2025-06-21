@@ -279,5 +279,22 @@ namespace School.Core.Services
             finalGrade.Score = await gradesRepository.GetAverageGrade(student);
             return finalGrade;
         }
+
+        public async Task<GetAverageGradeResponse> GetStudentFinalGradesAsync(int id)
+        {
+            var student = await studentsRepository.GetByIdAsync(id);
+            if (student == null)
+                throw new WrongInputException("Id not found");
+
+            var finalGrades = new GetAverageGradeResponse();
+            var results = await gradesRepository.GetFinalGradesForStudent(student);
+            finalGrades.AverageGrades = results.Select(g => new AverageGrade
+            {
+                Score = g.AverageGrade,
+                Subject = g.SubjectName
+
+            }).ToList();
+            return finalGrades;
+        }
     }
 }
