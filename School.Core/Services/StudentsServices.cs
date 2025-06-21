@@ -269,5 +269,15 @@ namespace School.Core.Services
             ).ToList();
             return grades;
         }
+
+        public async Task<EndOfYearAverageGradeResponse> GetStudentFinalGradeAsync(int id)
+        {
+            var student = await studentsRepository.GetByIdAsync(id);
+            if (student == null)
+                throw new WrongInputException("Id not found");
+            var finalGrade = new EndOfYearAverageGradeResponse();
+            finalGrade.Score = await gradesRepository.GetAverageGrade(student);
+            return finalGrade;
+        }
     }
 }

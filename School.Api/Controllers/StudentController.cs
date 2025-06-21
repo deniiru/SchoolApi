@@ -114,6 +114,24 @@ namespace School.Api.Controllers
             var grades = await studentsServices.GetStudentGradesAsync(idStudent, payload);
             return Ok(grades);
         }
+
+        [HttpPost("end-of-year-average-grade")]
+        public async Task<IActionResult> GetStudentFinalGrade([FromQuery] int idStudent)
+        {
+            try
+            {
+                var grades = await studentsServices.GetStudentFinalGradeAsync(idStudent);
+                return Ok(grades);
+            }
+            catch (WrongInputException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (ResourceMissingException ex)
+            {
+                return BadRequest(ex.Message);  
+            }
+        }
     }
 
 }

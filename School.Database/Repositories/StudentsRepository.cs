@@ -32,11 +32,12 @@ namespace School.Database.Repositories
 
         public async Task<Student?> GetByIdAsync(int studentId)
         {
-            var result = await schoolDatabaseContext.Students
-                .Where(s => s.DeletedAt == null)
-                .FirstOrDefaultAsync(s => s.Id == studentId);
-            return result;
+            return await schoolDatabaseContext.Students
+                .Include(s => s.Group)
+                .Where(s => s.DeletedAt == null && s.Id == studentId)
+                .FirstOrDefaultAsync();
         }
+
 
         public async Task<Student> GetByNameAsync(string firstName, string lastName)
         {
