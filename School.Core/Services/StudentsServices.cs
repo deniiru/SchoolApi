@@ -6,6 +6,7 @@ using School.Core.Dtos.Responses.Students;
 using School.Core.Mapping;
 using School.Database.Entities;
 using School.Database.Repositories;
+using School.Infrastructure.Exceptions;
 
 
 namespace School.Core.Services
@@ -15,18 +16,18 @@ namespace School.Core.Services
         private readonly StudentsRepository studentsRepository;
         private readonly GradesRepository gradesRepository;
         private readonly SubjectsRepository subjectRepository;
+        private readonly GroupsRepository groupsRepository;
 
-        public StudentsServices(StudentsRepository studentsRepository, GradesRepository gradesRepository, SubjectsRepository subjectsRepository)
+        public StudentsServices(StudentsRepository studentsRepository, GradesRepository gradesRepository, SubjectsRepository subjectsRepository, GroupsRepository groupsRepository)
         {
             this.studentsRepository = studentsRepository;
-            Console.WriteLine("StudentsServices initialized");
             this.gradesRepository = gradesRepository;
             this.subjectRepository = subjectsRepository;
+            this.groupsRepository = groupsRepository;
         }
 
         public async Task AddStudentAsync(AddStudentRequest payload)
         {
-            // find the group iD
             var newStudent = payload.ToEntity();
             newStudent.CreatedAt = DateTime.UtcNow;
 
@@ -51,7 +52,22 @@ namespace School.Core.Services
             return result;
         }
 
+        public async Task<GetStudentsResponse> GetFilterStudentsAsync(GetFilterdStudentsRequest payload)
+        {
+            var students = await studentsRepository.GetFilterStudentsAsync(payload.Filters, payload.SortingOption);
 
+            var result = new GetStudentsResponse();
+
+            result.Students = students.Select(
+                s => new StudentDto
+                {
+                    Id = s.Id,
+                    FirstName = s.FirstName,
+                    LastName = s.LastName
+                }).ToList();
+
+            return result;
+        }
         public async Task<StudentDto> GetStudentByIdAsync(int studentId)
         {
             var student = await studentsRepository.GetByIdAsync(studentId);
@@ -113,17 +129,16 @@ namespace School.Core.Services
         }
 
 
+        //public async Task<GetStudentsGradesResponse> GetFilteredStudentsWithGradesAsync(GetFilterdStudentsRequest payload)
+        //{
+        //    var students = await studentsRepository.GetAllWithGradesAsync(payload.Filters, payload.SortingOption);
 
-        public async Task<GetStudentsGradesResponse> GetFilteredStudentsWithGradesAsync(GetFilterdStudentsRequest payload)
-        {
-            var students = await studentsRepository.GetAllWithGradesAsync(payload.Filters, payload.SortingOption);
+        //    var result = new GetStudentsGradesResponse();
 
-            var result = new GetStudentsGradesResponse();
+        //    result.Students = students.ToStudentDto();
 
-            result.Students = students.ToStudentDto();
-
-            return result;
-        }
+        //    return result;
+        //}
 
         public async Task DeleteStudentAsync(DeletePayload payload)
         {
@@ -202,6 +217,36 @@ namespace School.Core.Services
             }
 
             return result;
+        }
+
+        public async Task UpdateStudentAsync (int id, UpdateStudentRequest payload)
+        {
+            var student = await studentsRepository.GetByIdAsync(id);
+            if (student == null)
+                throw new WrongInputException("Id not found");
+
+            var group = await groupsRepository.GetByIdAsync(payload.GroupId);
+            if (group == null)
+                throw new WrongInputException("Group name not found");
+
+            student.FirstName = payload.FirstName;
+            student.LastName = payload.LastName;
+            student.GroupId = payload.GroupId;  
+
+            await studentsRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateStundentGroupAsync (int id, UpdateStudentGroupRequest payload)
+        {
+            var student = await studentsRepository.GetByIdAsync(id);
+            if (student == null)
+                throw new WrongInputException($"Student with id {id} was not found ");
+            var group = await groupsRepository.GetByIdAsync(payload.GroupId);
+            if (group == null)
+                throw new WrongInputException("The group does not exist");
+
+            student.GroupId = group.Id;
+            await studentsRepository.SaveChangesAsync();
         }
     }
 }

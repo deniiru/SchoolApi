@@ -2,6 +2,7 @@
 using School.Database.Context;
 using School.Database.Dtos;
 using School.Database.Entities;
+using School.Database.Enums;
 using School.Database.QueryExtensions;
 
 namespace School.Database.Repositories
@@ -56,30 +57,63 @@ namespace School.Database.Repositories
                 .ToListAsync();
         }
 
-        public async Task<List<Student>> GetAllWithGradesAsync(StudentsFilteringDto filters, StudentsSortingDto sortingOption)
+        //public async Task<List<Student>> GetAllWithGradesAsync(StudentsFilteringDto filters, StudentsSortingDto sortingOption)
+        //{
+        //    var students = await schoolDatabaseContext.Students
+        //     .Include(s => s.Grades)
+        //     .Where(s => s.DeletedAt == null)
+
+        //     .Where(s => string.IsNullOrEmpty(filters.SearchValue) ||
+        //                 s.FirstName.ToLower().Contains(filters.SearchValue.ToLower()) ||
+        //                 s.LastName.ToLower().Contains(filters.SearchValue.ToLower()))
+
+        //     .Where(s => filters.DateRange == null ||
+        //                 s.Grades.Any(g =>
+        //                     (!filters.DateRange.LowerGrade.HasValue || g.Score >= filters.DateRange.LowerGrade.Value) &&
+        //                     (!filters.DateRange.UpperGrade.HasValue || g.Score <= filters.DateRange.UpperGrade.Value)))
+
+        //     .SortBy(sortingOption)
+
+        //     .Skip(filters.Skip)
+        //     .Take(filters.Take)
+
+        //     .AsNoTracking()
+        //     .ToListAsync();
+
+        //    return students;
+        //}
+
+
+        public async Task<List<Student>> GetFilterStudentsAsync (StudentsFilteringDto filters, StudentsSortingDto sortingOption)
         {
-            var students = await schoolDatabaseContext.Students
-             .Include(s => s.Grades)
-             .Where(s => s.DeletedAt == null)
+            var students = schoolDatabaseContext.Students
+                .Include( s => s.Group).ThenInclude( g => g.Major)
+                .Where( s => s.DeletedAt == null)
+                .Where( s => s.Group.DeletedAt == null)
+                .Where( s=> s.Group.Major.DeletedAt == null)
+                .AsQueryable();
 
-             .Where(s => string.IsNullOrEmpty(filters.SearchValue) ||
-                         s.FirstName.ToLower().Contains(filters.SearchValue.ToLower()) ||
-                         s.LastName.ToLower().Contains(filters.SearchValue.ToLower()))
+            if (!string.IsNullOrWhiteSpace(filters.FirstName) && filters.FirstName!= "string")
+                students = students.Where(s => s.FirstName.Contains(filters.FirstName));
 
-             .Where(s => filters.DateRange == null ||
-                         s.Grades.Any(g =>
-                             (!filters.DateRange.LowerGrade.HasValue || g.Score >= filters.DateRange.LowerGrade.Value) &&
-                             (!filters.DateRange.UpperGrade.HasValue || g.Score <= filters.DateRange.UpperGrade.Value)))
+            if (!string.IsNullOrWhiteSpace(filters.LastName) && filters.LastName != "string")
+                students = students.Where(s => s.LastName.Contains(filters.LastName));
 
-             .SortBy(sortingOption)
+            if (!string.IsNullOrWhiteSpace(filters.Group) && filters.Group != "string")
+                students = students.Where(s => s.Group.Name.Contains(filters.Group));
 
-             .Skip(filters.Skip)
-             .Take(filters.Take)
+            if (!string.IsNullOrWhiteSpace(filters.Major) && filters.Major != "string")
+                students = students.Where(s => s.Group.Major.Name.Contains(filters.Major));
 
-             .AsNoTracking()
-             .ToListAsync();
+            if (filters.Year != YearEnum.None)
+                students = students.Where(s => s.Group.An == filters.Year);
 
-            return students;
+            students = students
+                .Skip(filters.Skip)
+                .Take(filters.Take)
+                .SortBy(sortingOption);
+
+            return await students.ToListAsync();
         }
 
         public async Task SoftDeleteAsync(Student student)
@@ -101,5 +135,13 @@ namespace School.Database.Repositories
             return await schoolDatabaseContext.Grades
                 .Where(g => g.SubjectId == subjectId && g.StudentId == studentId).ToListAsync();
         }
+
+        public async Task<List<Student>> GetStudentsFromGroupAsync(int groupId)
+        {
+            return await schoolDatabaseContext.Students
+                .Where(s => s.DeletedAt == null && s.GroupId == groupId)
+                .ToListAsync();
+        }
+
     }
 }

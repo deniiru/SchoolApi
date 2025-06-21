@@ -3,12 +3,14 @@ using School.Core.Dtos.Requests.Students;
 using School.Core.Services;
 using School.Core.Dtos.Delete;
 using School.Core.Dtos.Responses.Students;
+using System.ComponentModel.DataAnnotations;
+using School.Infrastructure.Exceptions;
 
 namespace School.Api.Controllers
 {
     [ApiController]
     [Route("students")]
-    public class StudentController(StudentsServices studentsServices ) : Controller
+    public class StudentController(StudentsServices studentsServices) : Controller
     {
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent([FromBody] AddStudentRequest payload)
@@ -38,6 +40,38 @@ namespace School.Api.Controllers
             }
         }
 
+        #region update 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudentDetails(int id, [FromBody] UpdateStudentRequest payload)
+        {
+            try
+            {
+                await studentsServices.UpdateStudentAsync(id, payload);
+                return Ok();
+            }
+            catch(WrongInputException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("{id}/group")]
+        public async Task<IActionResult> UpdateStudentGroup(int id, [FromBody] UpdateStudentGroupRequest payload)
+        {
+            try
+            {
+                await studentsServices.UpdateStundentGroupAsync(id, payload);
+                return Ok();
+            }
+            catch (WrongInputException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        #endregion
+
         //****************************************
         [HttpGet("get-students-with-grades")]
         public async Task<IActionResult> GetStudentsWithGrades()
@@ -46,10 +80,17 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
-        [HttpPost("get-fillter-students-with-grades")]
-        public async Task<IActionResult> GetSFiltertudentsWithGrades(GetFilterdStudentsRequest payload)
+        //[HttpPost("get-fillter-students-with-grades")]
+        //public async Task<IActionResult> GetSFiltertudentsWithGrades(GetFilterdStudentsRequest payload)
+        //{
+        //    var students = await studentsServices.GetFilteredStudentsWithGradesAsync(payload);
+        //    return Ok(students);
+        //}
+
+        [HttpPost("get-students-filtered")]
+        public async Task<IActionResult> GetStudentsFiltered (GetFilterdStudentsRequest payload)
         {
-            var students = await studentsServices.GetFilteredStudentsWithGradesAsync(payload);
+            var students = await studentsServices.GetFilterStudentsAsync(payload);
             return Ok(students);
         }
 

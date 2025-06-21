@@ -8,6 +8,9 @@ using School.Database.Entities;
 using School.Database.Repositories;
 using School.Core.Mapping;
 using School.Core.Dtos.Delete;
+using School.Core.Dtos.Common.Students;
+using School.Infrastructure.Exceptions;
+using School.Core.Dtos.Responses.Students;
 
 namespace School.Core.Services
 {
@@ -27,6 +30,27 @@ namespace School.Core.Services
             groupsRepository.Insert(group);
             await groupsRepository.SaveChangesAsync();
             Console.WriteLine($"{payload.GroupName} added successfully.");
+        }
+
+        public async Task<GetStudentsResponse> GetGroupStudentsAsync(int groupId)
+        {
+            var group = await groupsRepository.GetByIdAsync(groupId);
+            if (group == null)
+            {
+                throw new WrongInputException("Group not found");
+            }
+
+            var students = await studentsRepository.GetStudentsFromGroupAsync(groupId);
+            var results =  new GetStudentsResponse();
+            results.Students = students.Select(s => new StudentDto
+            {
+                Id = s.Id,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+            }
+            ).ToList();
+            return results; 
+
         }
 
         public async Task AdvanceAllGroupsAsync()

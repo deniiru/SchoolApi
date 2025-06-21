@@ -23,13 +23,6 @@ namespace School.Core.Services
 
         public async Task AddGradeAsync(AddGradeRequest payload)
         {
-            //var students = await studentsServices.GetStudentByIdAsync(payload.StudentId);
-
-            //if (students == null)
-            //{
-            //    throw new Exception($"Student with ID {payload.StudentId} not found.");
-            //}
-
             var newEvent = payload.ToEntity();
             gradesRepository.Insert(newEvent);
             await gradesRepository.SaveChangesAsync();
@@ -47,7 +40,7 @@ namespace School.Core.Services
             await gradesRepository.SoftDeleteAsync(grade);
         }
 
-        public async Task UpdateGradeAsync(UpdateGradeRequest request)
+        public async Task  UpdateGradeAsync(UpdateGradeRequest request)
         {
            
             var grade = await gradesRepository.GetByIdAsync(request.Id);

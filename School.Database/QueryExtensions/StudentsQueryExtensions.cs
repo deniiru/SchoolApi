@@ -52,8 +52,6 @@ namespace School.Database.QueryExtensions
                     ? query.OrderBy(s => s.LastName)
                     : query.OrderByDescending(s => s.LastName),
 
-               
-
                 _ => query.OrderBy(s => s.LastName)
             };
         }
