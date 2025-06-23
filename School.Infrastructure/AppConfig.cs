@@ -9,6 +9,8 @@ namespace School.Infrastructure.Config
         public static bool ConsoleLogQueries = true;
         public static ConnectionStringsSettings? ConnectionStrings { get; set; }
 
+        public static JWTSettings JWTSettings { get; set; }
+
         public static void Init(IConfiguration configuration)
         {
             Configure(configuration);
@@ -17,7 +19,7 @@ namespace School.Infrastructure.Config
         private static void Configure(IConfiguration configuration)
         {
             ConnectionStrings = configuration.GetSection("ConnectionStrings").Get<ConnectionStringsSettings>();
-
+            JWTSettings = configuration.GetSection("JWT").Get<JWTSettings>();
         }
     }
 

@@ -22,7 +22,7 @@ builder.Services.AddServices();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Tickify", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "School", Version = "v1" });
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme.",
