@@ -47,7 +47,7 @@ namespace School.Api.Controllers
         }
 
 
-        [HttpGet("{groupId}/students")]
+        [HttpPost("{groupId}/students")]
         public async Task<IActionResult> GetGroupStundent([FromRoute] int groupId)
         {
             try
@@ -59,6 +59,13 @@ namespace School.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("get-groups")]
+        public async Task<IActionResult> GetGroups()
+        {
+            var groups = await groupServices.GetAllAsync();
+            return Ok(groups);
         }
     }
 }

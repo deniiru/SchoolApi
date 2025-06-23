@@ -60,13 +60,39 @@ namespace School.Database.Repositories
             return await schoolDatabaseContext.Grades.Where(g => g.StudentId == id).ToListAsync();
         }
 
-        public async Task<List<Grade>> GetByStudentIdFilteredAsync(int idStudent, GradesFilteringDto filters, GradesSortingDto sortingOption)
+        public async Task<List<Grade>> GetByStudentIdFilteredAsync(int idStudent, StudentGradesFilteringDto filters, GradesSortingDto sortingOption)
         {
 
             var grades = schoolDatabaseContext.Grades
               .Include(g => g.Subject)
               .Where(g => g.DeletedAt == null && g.StudentId == idStudent)
               .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filters.Subject) && filters.Subject != "string")
+                grades = grades.Where(s => s.Subject.Name == filters.Subject);
+
+            if (filters.Year != YearEnum.None)
+                grades = grades.Where(g => g.Subject.Year == filters.Year);
+
+            grades = grades
+                .Skip(filters.Skip)
+                .Take(filters.Take)
+                .SortBy(sortingOption);
+
+            return await grades.ToListAsync();
+        }
+
+        public async Task<List<Grade>> GetAllAsync(GradesFilteringDto filters, GradesSortingDto sortingOption)
+        {
+
+            var grades = schoolDatabaseContext.Grades
+                .Include (g => g.Student)
+                .Include(g => g.Subject)
+              .Where(g => g.DeletedAt == null)
+              .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filters.LastName) && filters.LastName != "string")
+                grades = grades.Where(s => s.Student.LastName == filters.LastName);
 
             if (!string.IsNullOrWhiteSpace(filters.Subject) && filters.Subject != "string")
                 grades = grades.Where(s => s.Subject.Name == filters.Subject);
@@ -103,7 +129,6 @@ namespace School.Database.Repositories
 
             return gradesPerSubject;
         }
-
 
         public async Task<float> GetAverageGrade(Student student)
         {

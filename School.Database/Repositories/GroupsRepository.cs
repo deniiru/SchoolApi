@@ -30,5 +30,12 @@ namespace School.Database.Repositories
                 .FirstOrDefaultAsync(); 
         }
 
+        public async Task<List<Group>> GetAllAsync ()
+        {
+            return await schoolDatabaseContext.Groups
+                .Where(g => g.DeletedAt == null )
+                .ToListAsync();
+        }
+
     }
 }

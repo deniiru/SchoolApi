@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace School.Core.Dtos.Requests.Students
+namespace School.Core.Dtos.Requests.Grades
 {
-    public class GetFilterdStudentGradesRequest
+    public class GetFilteredGradesRequest
     {
-        public StudentGradesFilteringDto Filters { get; set; }
+        public GradesFilteringDto Filters { get; set; }
         public GradesSortingDto SortingOption { get; set; }
     }
 }

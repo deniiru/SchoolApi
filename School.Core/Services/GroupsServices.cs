@@ -11,6 +11,8 @@ using School.Core.Dtos.Delete;
 using School.Core.Dtos.Common.Students;
 using School.Infrastructure.Exceptions;
 using School.Core.Dtos.Responses.Students;
+using School.Core.Dtos.Responses.Groups;
+using School.Core.Dtos.Common.Groups;
 
 namespace School.Core.Services
 {
@@ -82,6 +84,17 @@ namespace School.Core.Services
                 await studentsRepository.SoftDeleteAsync(student);
             }
             await groupsRepository.SoftDeleteAsync(group);
+        }
+
+
+        public async Task<GetGroupsResponse> GetAllAsync()
+        {
+            var result = await groupsRepository.GetAllAsync();
+            var groups = new GetGroupsResponse();
+            groups.Groups = result.Select(
+                r => new GroupDto { Name = r.Name, Id = r.Id}
+                ).ToList();
+            return groups;
         }
     }
 }

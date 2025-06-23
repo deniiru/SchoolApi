@@ -13,8 +13,5 @@ namespace School.Core.Dtos.Common.Groups
 
         public string Name { get; set; }
 
-        public int MajorId { get; set; }
-
-        public MajorDto Major{ get; set;}
     }
 }

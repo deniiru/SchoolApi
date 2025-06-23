@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace School.Database.Dtos
 {
-    public class GradesFilteringDto
+    public class StudentGradesFilteringDto
     {
-        public string? LastName { get; set; }
+       
         public YearEnum Year { get; set; }
 
         public string? Subject { get; set; }

@@ -5,10 +5,12 @@ using School.Core.Dtos.Requests.Students;
 using School.Database.Context;
 using School.Core.Dtos.Common.Grades;
 using School.Core.Dtos.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace School.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("grades")]
     public class GradeController(StudentsServices studentsServices, GradesServices gradesServices) : Controller
     {
@@ -41,7 +43,7 @@ namespace School.Api.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}/update")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] UpdateGradeRequest request)
         {
 
@@ -51,29 +53,21 @@ namespace School.Api.Controllers
 
         }
 
-
-
-        [HttpGet("get-grades")]
-        public async Task<IActionResult> GetGrades()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetGradeById (int id)
         {
-            try
-            {
-                var grades = await gradesServices.GetAllGradesAsync();
-                return Ok(grades);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex.Message}");
-            }
+            var grade = await gradesServices.GetByIdAsync(id);
+            return Ok(grade);
         }
 
-        [HttpGet("get-student-grades")]
-        public async Task<IActionResult> GetStudentGrades([FromBody] AddStudentRequest payload)
+     
+        [HttpPost("get-grades")]
+        public async Task<IActionResult> GetGrades([FromBody]GetFilteredGradesRequest payload)
         {
             try
             {
-                //var grades = await gradesServices.GetStudentGradesAsync(payload);
-                return Ok();
+                var grades = await gradesServices.GetAllGradesAsync(payload);
+                return Ok(grades);
             }
             catch (Exception ex)
             {
@@ -84,3 +78,5 @@ namespace School.Api.Controllers
 
 }
 
+// - elev - getAllstudentid
+// - profesor - by id, getAll(cu filtre)  

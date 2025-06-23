@@ -19,12 +19,51 @@ namespace School.Api.Controllers
             return Ok($"Student {payload.FirstName} added successfully.");
         }
 
+        #region getters 
+
         [HttpGet("get-students")]
         public async Task<IActionResult> GetStudents()
         {
             var students = await studentsServices.GetAllStudentsAsync();
             return Ok(students);
         }
+
+        [HttpGet("get-students-with-grades")]
+        public async Task<IActionResult> GetStudentsWithGrades()
+        {
+            var students = await studentsServices.GetStudentsWithGradesAsync();
+            return Ok(students);
+        }
+
+        [HttpPost("get-students-filtered")]
+        public async Task<IActionResult> GetStudentsFiltered(GetFilterdStudentsRequest payload)
+        {
+            var students = await studentsServices.GetFilterStudentsAsync(payload);
+            return Ok(students);
+        }
+
+        [HttpPost("get-student-mean-in-subject")]
+        public async Task<IActionResult> GetStudentMeanInSubject(GetStudentMeanInSubjectRequest payload)
+        {
+            var mean = await studentsServices.GetStudentMeanInSubjectAsync(payload);
+            return Ok(mean);
+        }
+
+        [HttpPost("get-failures-in-subject")]//i know i am mean
+        public async Task<IActionResult> GetStudentsWhoFailedInSubject(GetStudentsWhoFailedInSubjectRequest payload)
+        {
+            var students = await studentsServices.GetAllStudentsWhoFailedInSubjectAsync(payload);
+            return Ok(students);
+        }
+
+        [HttpPost("{idStudent}/grades")]
+        public async Task<IActionResult> GetStudentGrades([FromRoute] int idStudent, [FromBody] GetFilterdStudentGradesRequest payload)
+        {
+            var grades = await studentsServices.GetStudentGradesAsync(idStudent, payload);
+            return Ok(grades);
+        }
+
+        #endregion
 
         [HttpDelete("delete-student")]
         public async Task<IActionResult> DeleteStudent(DeletePayload payload)
@@ -71,49 +110,6 @@ namespace School.Api.Controllers
         }
 
         #endregion
-
-        //****************************************
-        [HttpGet("get-students-with-grades")]
-        public async Task<IActionResult> GetStudentsWithGrades()
-        {
-            var students = await studentsServices.GetStudentsWithGradesAsync();
-            return Ok(students);
-        }
-
-        //[HttpPost("get-fillter-students-with-grades")]
-        //public async Task<IActionResult> GetSFiltertudentsWithGrades(GetFilterdStudentsRequest payload)
-        //{
-        //    var students = await studentsServices.GetFilteredStudentsWithGradesAsync(payload);
-        //    return Ok(students);
-        //}
-
-        [HttpPost("get-students-filtered")]
-        public async Task<IActionResult> GetStudentsFiltered(GetFilterdStudentsRequest payload)
-        {
-            var students = await studentsServices.GetFilterStudentsAsync(payload);
-            return Ok(students);
-        }
-
-        [HttpPost("get-student-mean-in-subject")]
-        public async Task<IActionResult> GetStudentMeanInSubject(GetStudentMeanInSubjectRequest payload)
-        {
-            var mean = await studentsServices.GetStudentMeanInSubjectAsync(payload);
-            return Ok(mean);
-        }
-
-        [HttpPost("get-failures-in-subject")]//i know i am mean
-        public async Task<IActionResult> GetStudentsWhoFailedInSubject(GetStudentsWhoFailedInSubjectRequest payload)
-        {
-            var students = await studentsServices.GetAllStudentsWhoFailedInSubjectAsync(payload);
-            return Ok(students);
-        }
-
-        [HttpPost("{idStudent}/grades")]
-        public async Task<IActionResult> GetStudentGrades([FromRoute] int idStudent, [FromBody] GetFilterdStudentGradesRequest payload)
-        {
-            var grades = await studentsServices.GetStudentGradesAsync(idStudent, payload);
-            return Ok(grades);
-        }
 
         [HttpPost("end-of-year-average-grade")]
         public async Task<IActionResult> GetStudentFinalGrade([FromQuery] int idStudent)

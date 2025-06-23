@@ -5,6 +5,7 @@ using School.Core.Dtos.Common.Grades;
 using School.Core.Mapping;
 using School.Core.Dtos.Requests.Students;
 using School.Core.Dtos.Delete;
+using School.Infrastructure.Exceptions;
 
 namespace School.Core.Services
 {
@@ -32,7 +33,7 @@ namespace School.Core.Services
         {
             var grade = await gradesRepository.GetByIdAsync(payload.Id);
 
-            if (grade == null) 
+            if (grade == null)
             {
                 throw new Exception($"Grade with ID {payload.Id} not found.");
             }
@@ -40,9 +41,9 @@ namespace School.Core.Services
             await gradesRepository.SoftDeleteAsync(grade);
         }
 
-        public async Task  UpdateGradeAsync(UpdateGradeRequest request)
+        public async Task UpdateGradeAsync(UpdateGradeRequest request)
         {
-           
+
             var grade = await gradesRepository.GetByIdAsync(request.Id);
             if (grade == null)
             {
@@ -59,10 +60,27 @@ namespace School.Core.Services
             grade.Score = request.Score;
             grade.StudentId = request.StudentId;
 
-            
+
             await gradesRepository.UpdateAsync(grade);
         }
 
+        public async Task<GradeDto> GetByIdAsync(int id)
+        {
+            var grade = await gradesRepository.GetByIdAsync(id);
+            if (grade == null)
+                throw new WrongInputException("Grade was not found");
+
+            var result = new GradeDto
+            {
+                Id = grade.Id,
+                StudentId = grade.StudentId,
+                SubjectId = grade.SubjectId,
+                Score = grade.Score,
+            };
+            return result;
+        }
+
+        // modificare dupa id la autentificare 
         public async Task<GetGradesResponse> GetAllGradesAsync()
         {
             var grades = await gradesRepository.GetAllAsync();
@@ -78,7 +96,23 @@ namespace School.Core.Services
             return result;
         }
 
-        //public async Task<GetGradesResponse> GetStudentGradesAsync(AddStudentRequest payload)
+        public async Task<GetGradesResponse> GetAllGradesAsync(GetFilteredGradesRequest payload)
+        {
+            var grades = await gradesRepository.GetAllAsync( payload.Filters, payload.SortingOption);
+            var result = new GetGradesResponse();
+            result.Grades = grades.Select(
+                g => new GradeDto
+                {
+                    Id = g.Id,
+                    StudentId = g.StudentId,
+                    SubjectId = g.SubjectId,
+                    Score = g.Score,
+                }).ToList();
+            return result;
+        }
+
+        // notele elevului
+        //public async Task<GetGradesResponse> GetStudentGradesAsync()
         //{
         //    var students = await studentsServices.GetStudentByNameAsync(payload);
         //    if (students == null)
@@ -99,3 +133,6 @@ namespace School.Core.Services
         //}
     }
 }
+
+// - elev - getAll
+// - profesor - by id, getAll(cu filtre)  
