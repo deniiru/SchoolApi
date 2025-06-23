@@ -9,7 +9,7 @@ namespace School.Infrastructure.Config
         public static bool ConsoleLogQueries = true;
         public static ConnectionStringsSettings? ConnectionStrings { get; set; }
 
-        public static JWTSettings JWTSettings { get; set; }
+        public static JWTSettings? JWTSettings { get; set; }
 
         public static void Init(IConfiguration configuration)
         {

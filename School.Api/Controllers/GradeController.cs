@@ -14,6 +14,7 @@ namespace School.Api.Controllers
     [Route("grades")]
     public class GradeController(StudentsServices studentsServices, GradesServices gradesServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("add-grade")]
         public async Task<IActionResult> AddGrade([FromBody] AddGradeRequest payload)
         {
@@ -28,6 +29,7 @@ namespace School.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-grade")]
         public async Task<IActionResult> DeleteGrade(DeletePayload payload)
         {
@@ -43,6 +45,7 @@ namespace School.Api.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}/update")]
         public async Task<IActionResult> UpdateStudent(int id, [FromBody] UpdateGradeRequest request)
         {
@@ -53,6 +56,7 @@ namespace School.Api.Controllers
 
         }
 
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGradeById (int id)
         {
@@ -60,7 +64,8 @@ namespace School.Api.Controllers
             return Ok(grade);
         }
 
-     
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("get-grades")]
         public async Task<IActionResult> GetGrades([FromBody]GetFilteredGradesRequest payload)
         {
@@ -77,6 +82,3 @@ namespace School.Api.Controllers
     }
 
 }
-
-// - elev - getAllstudentid
-// - profesor - by id, getAll(cu filtre)  

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using School.Core.Dtos.Delete;
 using School.Core.Dtos.Requests.Students;
 using School.Core.Dtos.Requests.Teachers;
@@ -10,7 +11,7 @@ namespace School.Api.Controllers
     [Route("Teachers")]
     public class TeacherController(TeachersServices teachersServices) : Controller
     {
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add-teacher")]
         public async Task<IActionResult> AddTeacher([FromBody] AddTeacherRequest payload)
         {
@@ -18,6 +19,7 @@ namespace School.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-teacher")]
         public async Task<IActionResult> DeleteTeacher(DeletePayload payload)
         {
@@ -31,6 +33,7 @@ namespace School.Api.Controllers
                 return BadRequest($"Error: {ex.Message}");
             }
         }
+
 
         [HttpGet("get-teachers-with-subjects")]
         public async Task<IActionResult> GetAllTeacherWithSubjects()

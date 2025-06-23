@@ -2,6 +2,7 @@
 using School.Core.Dtos.Requests.Majors;
 using School.Core.Services;
 using School.Core.Dtos.Delete;
+using Microsoft.AspNetCore.Authorization;
 
 namespace School.Api.Controllers
 {
@@ -9,6 +10,7 @@ namespace School.Api.Controllers
     [Route("Group")]
     public class MajorController(MajorsServices majorsServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add-major")]
         public async Task<IActionResult> AddMajor([FromBody] AddMajorRequest payload)
         {
@@ -16,6 +18,7 @@ namespace School.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-major")]
         public async Task<IActionResult> DeleteMajor(DeletePayload payload)
         {

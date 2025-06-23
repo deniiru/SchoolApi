@@ -4,6 +4,7 @@ using School.Core.Dtos.Requests.Groups;
 using School.Core.Services;
 using School.Core.Dtos.Delete;
 using School.Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace School.Api.Controllers
 {
@@ -11,6 +12,7 @@ namespace School.Api.Controllers
     [Route("Group")]
     public class GroupController(GroupsServices groupServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add-group")]
         public async Task<IActionResult> AddGroup([FromBody] AddGroupRequest payload)
         {
@@ -18,6 +20,7 @@ namespace School.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-group")]
         public async Task<IActionResult> DeleteGroup(DeletePayload payload)
         {
@@ -32,6 +35,7 @@ namespace School.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("advance-groups")]
         public async Task<IActionResult> AdvanceAllGroups()
         {
@@ -60,6 +64,7 @@ namespace School.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
 
         [HttpGet("get-groups")]
         public async Task<IActionResult> GetGroups()

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using School.Core.Dtos.Delete;
 using School.Core.Dtos.Requests.Subjects;
 using School.Core.Services;
@@ -6,9 +7,11 @@ using School.Core.Services;
 namespace School.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("Subject")]
     public class SubjectController(SubjectsServices subjectsServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add-subject")]
         public async Task<IActionResult> AddSubject([FromBody] AddSubjectRequest payload)
         {
@@ -16,6 +19,7 @@ namespace School.Api.Controllers
             return Ok();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-subject")]
         public async Task<IActionResult> DeleteSubject(DeletePayload payload)
         {

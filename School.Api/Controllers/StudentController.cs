@@ -5,13 +5,16 @@ using School.Core.Dtos.Delete;
 using School.Core.Dtos.Responses.Students;
 using System.ComponentModel.DataAnnotations;
 using School.Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace School.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("students")]
     public class StudentController(StudentsServices studentsServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent([FromBody] AddStudentRequest payload)
         {
@@ -20,7 +23,7 @@ namespace School.Api.Controllers
         }
 
         #region getters 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("get-students")]
         public async Task<IActionResult> GetStudents()
         {
@@ -28,6 +31,7 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet("get-students-with-grades")]
         public async Task<IActionResult> GetStudentsWithGrades()
         {
@@ -35,6 +39,7 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("get-students-filtered")]
         public async Task<IActionResult> GetStudentsFiltered(GetFilterdStudentsRequest payload)
         {
@@ -65,6 +70,7 @@ namespace School.Api.Controllers
 
         #endregion
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-student")]
         public async Task<IActionResult> DeleteStudent(DeletePayload payload)
         {
@@ -80,8 +86,9 @@ namespace School.Api.Controllers
         }
 
         #region update 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudentDetails(int id, [FromBody] UpdateStudentRequest payload)
+        public async Task<IActionResult> UpdateStudentDetails([FromRoute] int id, [FromBody] UpdateStudentRequest payload)
         {
             try
             {
@@ -94,57 +101,31 @@ namespace School.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/group")]
-        public async Task<IActionResult> UpdateStudentGroup(int id, [FromBody] UpdateStudentGroupRequest payload)
+        public async Task<IActionResult> UpdateStudentGroup([FromRoute] int id, [FromBody] UpdateStudentGroupRequest payload)
         {
-            try
-            {
-                await studentsServices.UpdateStundentGroupAsync(id, payload);
-                return Ok();
-            }
-            catch (WrongInputException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
+            await studentsServices.UpdateStundentGroupAsync(id, payload);
+            return Ok();
         }
-
         #endregion
+
 
         [HttpPost("end-of-year-average-grade")]
         public async Task<IActionResult> GetStudentFinalGrade([FromQuery] int idStudent)
         {
-            try
-            {
-                var grades = await studentsServices.GetStudentFinalGradeAsync(idStudent);
-                return Ok(grades);
-            }
-            catch (WrongInputException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ResourceMissingException ex)
-            {
-                return BadRequest(ex.Message);  
-            }
+            var grades = await studentsServices.GetStudentFinalGradeAsync(idStudent);
+            return Ok(grades);
+
         }
 
         [HttpPost("{idStudent}/subjects-grade")]
         public async Task<IActionResult> GetStudentGradesPerSubjects([FromRoute] int idStudent)
         {
-            try
-            {
-                var grades = await studentsServices.GetStudentFinalGradesAsync(idStudent);
-                return Ok(grades);
-            }
-            catch (WrongInputException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (ResourceMissingException ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            var grades = await studentsServices.GetStudentFinalGradesAsync(idStudent);
+            return Ok(grades);
+
         }
     }
 
