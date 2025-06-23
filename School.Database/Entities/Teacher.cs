@@ -11,6 +11,9 @@ namespace School.Database.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public int UserAccountId {  get; set; }
+        public User User { get; set; }
+
         public List<Subject> Subjects { get; set; }
     }
 

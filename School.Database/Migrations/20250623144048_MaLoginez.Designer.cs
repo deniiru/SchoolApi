@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using School.Database.Context;
 
@@ -11,9 +12,11 @@ using School.Database.Context;
 namespace School.Database.Migrations
 {
     [DbContext(typeof(SchoolDatabaseContext))]
-    partial class SchoolDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20250623144048_MaLoginez")]
+    partial class MaLoginez
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,9 +148,6 @@ namespace School.Database.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserAccountId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");
@@ -219,9 +219,6 @@ namespace School.Database.Migrations
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserAccountId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Teachers");
@@ -245,32 +242,21 @@ namespace School.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PasswordSalt")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TeacherId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId")
-                        .IsUnique()
-                        .HasFilter("[StudentId] IS NOT NULL");
-
-                    b.HasIndex("TeacherId")
-                        .IsUnique()
-                        .HasFilter("[TeacherId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -335,21 +321,6 @@ namespace School.Database.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("School.Database.Entities.User", b =>
-                {
-                    b.HasOne("School.Database.Entities.Student", "Student")
-                        .WithOne("User")
-                        .HasForeignKey("School.Database.Entities.User", "StudentId");
-
-                    b.HasOne("School.Database.Entities.Teacher", "Teacher")
-                        .WithOne("User")
-                        .HasForeignKey("School.Database.Entities.User", "TeacherId");
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Teacher");
-                });
-
             modelBuilder.Entity("School.Database.Entities.Group", b =>
                 {
                     b.Navigation("Studentii");
@@ -365,9 +336,6 @@ namespace School.Database.Migrations
             modelBuilder.Entity("School.Database.Entities.Student", b =>
                 {
                     b.Navigation("Grades");
-
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("School.Database.Entities.Subject", b =>
@@ -378,9 +346,6 @@ namespace School.Database.Migrations
             modelBuilder.Entity("School.Database.Entities.Teacher", b =>
                 {
                     b.Navigation("Subjects");
-
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

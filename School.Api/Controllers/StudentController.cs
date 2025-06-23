@@ -5,13 +5,16 @@ using School.Core.Dtos.Delete;
 using School.Core.Dtos.Responses.Students;
 using System.ComponentModel.DataAnnotations;
 using School.Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace School.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("students")]
     public class StudentController(StudentsServices studentsServices) : Controller
     {
+        [Authorize(Roles = "Admin")]
         [HttpPost("add-student")]
         public async Task<IActionResult> AddStudent([FromBody] AddStudentRequest payload)
         {
@@ -26,6 +29,7 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-student")]
         public async Task<IActionResult> DeleteStudent(DeletePayload payload)
         {
@@ -41,6 +45,7 @@ namespace School.Api.Controllers
         }
 
         #region update 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudentDetails(int id, [FromBody] UpdateStudentRequest payload)
         {
@@ -55,6 +60,7 @@ namespace School.Api.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPatch("{id}/group")]
         public async Task<IActionResult> UpdateStudentGroup(int id, [FromBody] UpdateStudentGroupRequest payload)
         {
@@ -73,6 +79,7 @@ namespace School.Api.Controllers
         #endregion
 
         //****************************************
+        [Authorize(Roles = "Admin")]
         [HttpGet("get-students-with-grades")]
         public async Task<IActionResult> GetStudentsWithGrades()
         {
@@ -94,6 +101,7 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
+
         [HttpPost("get-student-mean-in-subject")]
         public async Task<IActionResult> GetStudentMeanInSubject(GetStudentMeanInSubjectRequest payload)
         {
@@ -101,7 +109,7 @@ namespace School.Api.Controllers
             return Ok(mean);
         }
 
-        [HttpPost("get-failures-in-subject")]//i know i am mean
+        [HttpPost("get-students-who-failed-in-subject")]
         public async Task<IActionResult> GetStudentsWhoFailedInSubject(GetStudentsWhoFailedInSubjectRequest payload)
         {
             var students = await studentsServices.GetAllStudentsWhoFailedInSubjectAsync(payload);

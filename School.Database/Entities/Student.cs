@@ -16,6 +16,9 @@ namespace School.Database.Entities
         public int GroupId {  get; set; }
         public Group Group { get; set; }
 
+        public int UserAccountId { get; set; }
+        public User User { get; set; }
+
         public List<Grade> Grades { get; set; } = new List<Grade>();
 
 

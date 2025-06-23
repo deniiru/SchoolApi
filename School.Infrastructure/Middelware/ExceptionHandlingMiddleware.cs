@@ -49,7 +49,7 @@ namespace School.Infrastructure.Middelware
             }
             catch (Exception ex)
             {
-                await RespondToExceptionAsync(context, HttpStatusCode.InternalServerError, "Internal Server Error", ex);
+                await RespondToExceptionAsync(context, HttpStatusCode.InternalServerError, ex.Message, ex);
             }
 
             Console.WriteLine("response1");
