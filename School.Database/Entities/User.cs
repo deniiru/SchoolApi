@@ -8,16 +8,17 @@ namespace School.Database.Entities
 {
     public class User : BaseEntity
     {
-        public int? StudentId { get; set; }
-        public Student Student { get; set; }
+        //public int? StudentId { get; set; }
+        //public Student Student { get; set; }
 
-        public int? TeacherId { get; set; }
-        public Teacher Teacher { get; set; }
+        //public int? TeacherId { get; set; }
+        //public Teacher Teacher { get; set; }
 
         // Extend with login details as needed
         public string Username { get; set; }
         public string Email {  get; set; }
-        public string Password { get; set; }
+        public bool IsAdmin { get; set; }
+        public string PasswordHash { get; set; }
     }
 
 }
