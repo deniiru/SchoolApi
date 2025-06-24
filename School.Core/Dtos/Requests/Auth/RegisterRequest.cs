@@ -8,7 +8,8 @@ namespace School.Core.Dtos.Requests.Auth
 {
     public class RegisterRequest
     {
-        public int StudentId { get; set; }  
+        public int EntityId { get; set; }
+        public bool IsTeacher { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }
