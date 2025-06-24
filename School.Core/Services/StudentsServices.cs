@@ -84,63 +84,6 @@ namespace School.Core.Services
             };
         }
 
-        //public async Task<GetStudentsResponse> GetStudentByNameAsync(AddStudentRequest payload)
-        //{
-        //    var students = await studentsRepository.GetByNameAsync(payload.FirstName, payload.LastName);
-        //    if (students == null)
-        //    {
-        //        throw new Exception($"Student not found.");
-        //    }
-        //    var result = new GetStudentsResponse();
-
-        //    result.Students = students.Select(
-        //        s => new StudentDto
-        //        {
-        //            Id = s.Id,
-        //            FirstName = s.FirstName,
-        //            LastName = s.LastName
-        //        }).ToList();
-
-        //    return result;
-        //}
-
-        public async Task<GetStudentsGradesResponse> GetStudentsWithGradesAsync()
-        {
-            var students = await studentsRepository.GetAllWithGradesAsync();
-
-            var result = new GetStudentsGradesResponse();
-
-            result.Students = students.Select(
-                s => new StudentDto
-                {
-                    Id = s.Id,
-                    FirstName = s.FirstName,
-                    LastName = s.LastName,
-                    Grades = s.Grades.Select(g => new GradeDto
-                    {
-                        Id = g.Id,
-                        StudentId = g.StudentId,
-                        SubjectId = g.SubjectId,
-                        Score = g.Score
-                    }).ToList()
-
-                }).ToList();
-
-            return result;
-        }
-
-
-        //public async Task<GetStudentsGradesResponse> GetFilteredStudentsWithGradesAsync(GetFilterdStudentsRequest payload)
-        //{
-        //    var students = await studentsRepository.GetAllWithGradesAsync(payload.Filters, payload.SortingOption);
-
-        //    var result = new GetStudentsGradesResponse();
-
-        //    result.Students = students.ToStudentDto();
-
-        //    return result;
-        //}
-
         public async Task DeleteStudentAsync(DeletePayload payload)
         {
             var student = studentsRepository.GetByIdAsync(payload.Id).Result;
@@ -232,7 +175,8 @@ namespace School.Core.Services
 
             student.FirstName = payload.FirstName;
             student.LastName = payload.LastName;
-            student.GroupId = payload.GroupId;  
+            student.GroupId = payload.GroupId;
+            student.ModifiedAt = DateTime.UtcNow;
 
             await studentsRepository.SaveChangesAsync();
         }
@@ -247,6 +191,7 @@ namespace School.Core.Services
                 throw new WrongInputException("The group does not exist");
 
             student.GroupId = group.Id;
+            student.ModifiedAt = DateTime.UtcNow;
             await studentsRepository.SaveChangesAsync();
         }
 

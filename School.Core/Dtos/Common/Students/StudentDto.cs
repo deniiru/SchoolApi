@@ -17,7 +17,5 @@ namespace School.Core.Dtos.Common.Students
 
         public string LastName { get; set; } = string.Empty;
 
-        public List<GradeDto> Grades { get; set; } = new List<GradeDto>();
-
     }
 }

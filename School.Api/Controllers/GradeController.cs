@@ -56,28 +56,19 @@ namespace School.Api.Controllers
 
         }
 
-        
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGradeById (int id)
+        public async Task<IActionResult> GetGradeById(int id)
         {
             var grade = await gradesServices.GetByIdAsync(id);
             return Ok(grade);
         }
 
-
-        [Authorize(Roles = "Admin")]
         [HttpPost("get-grades")]
-        public async Task<IActionResult> GetGrades([FromBody]GetFilteredGradesRequest payload)
+        public async Task<IActionResult> GetGrades([FromBody] GetFilteredGradesRequest payload)
         {
-            try
-            {
-                var grades = await gradesServices.GetAllGradesAsync(payload);
-                return Ok(grades);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Error: {ex.Message}");
-            }
+            var grades = await gradesServices.GetAllGradesAsync(payload);
+            return Ok(grades);
         }
     }
 

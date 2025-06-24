@@ -31,13 +31,6 @@ namespace School.Api.Controllers
             return Ok(students);
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpGet("get-students-with-grades")]
-        public async Task<IActionResult> GetStudentsWithGrades()
-        {
-            var students = await studentsServices.GetStudentsWithGradesAsync();
-            return Ok(students);
-        }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("get-students-filtered")]
@@ -90,19 +83,12 @@ namespace School.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudentDetails([FromRoute] int id, [FromBody] UpdateStudentRequest payload)
         {
-            try
-            {
                 await studentsServices.UpdateStudentAsync(id, payload);
                 return Ok();
-            }
-            catch (WrongInputException ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}/group")]
+        [HttpPatch("{id}/update-group")]
         public async Task<IActionResult> UpdateStudentGroup([FromRoute] int id, [FromBody] UpdateStudentGroupRequest payload)
         {
             await studentsServices.UpdateStundentGroupAsync(id, payload);

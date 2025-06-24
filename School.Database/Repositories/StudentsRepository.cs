@@ -49,41 +49,6 @@ namespace School.Database.Repositories
             return result;
         }
 
-        public async Task<List<Student>> GetAllWithGradesAsync()
-        {
-            return await schoolDatabaseContext.Students
-                .Include(s => s.Grades)
-                .Where(s => s.DeletedAt == null)
-                .OrderBy(s => s.LastName)
-                .ToListAsync();
-        }
-
-        //public async Task<List<Student>> GetAllWithGradesAsync(StudentsFilteringDto filters, StudentsSortingDto sortingOption)
-        //{
-        //    var students = await schoolDatabaseContext.Students
-        //     .Include(s => s.Grades)
-        //     .Where(s => s.DeletedAt == null)
-
-        //     .Where(s => string.IsNullOrEmpty(filters.SearchValue) ||
-        //                 s.FirstName.ToLower().Contains(filters.SearchValue.ToLower()) ||
-        //                 s.LastName.ToLower().Contains(filters.SearchValue.ToLower()))
-
-        //     .Where(s => filters.DateRange == null ||
-        //                 s.Grades.Any(g =>
-        //                     (!filters.DateRange.LowerGrade.HasValue || g.Score >= filters.DateRange.LowerGrade.Value) &&
-        //                     (!filters.DateRange.UpperGrade.HasValue || g.Score <= filters.DateRange.UpperGrade.Value)))
-
-        //     .SortBy(sortingOption)
-
-        //     .Skip(filters.Skip)
-        //     .Take(filters.Take)
-
-        //     .AsNoTracking()
-        //     .ToListAsync();
-
-        //    return students;
-        //}
-
 
         public async Task<List<Student>> GetFilterStudentsAsync (StudentsFilteringDto filters, StudentsSortingDto sortingOption)
         {

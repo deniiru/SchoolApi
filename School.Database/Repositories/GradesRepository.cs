@@ -49,7 +49,7 @@ namespace School.Database.Repositories
 
         public async Task UpdateAsync(Grade entity)
         {
-            entity.ModifiedAt = DateTime.UtcNow; // Set updated timestamp
+            entity.ModifiedAt = DateTime.UtcNow; 
 
             schoolDatabaseContext.Grades.Update(entity);
             await SaveChangesAsync();
