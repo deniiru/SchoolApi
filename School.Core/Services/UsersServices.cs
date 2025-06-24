@@ -37,11 +37,17 @@ namespace School.Core.Services
 
             var hashedPassword = authService.HashPassword(registerData.Password, salt);
 
-            var student = studentsRepository.GetByIdAsync(registerData.StudentId).Result;
-
             var user = new User();
-            user.StudentId = registerData.StudentId;
-            user.Student = student;
+            if (registerData.IsTeacher)
+            {
+                user.TeacherId = registerData.EntityId;
+                user.Teacher = teachersRepository.GetFirstOrDefaultAsync(registerData.EntityId).Result;
+            }
+            else
+            {
+                user.StudentId = registerData.EntityId;
+                user.Student = studentsRepository.GetFirstOrDefaultAsync(registerData.EntityId).Result;
+            }
             user.Email = registerData.Email;
             user.Password = hashedPassword;
             user.PasswordSalt = Convert.ToBase64String(salt);
@@ -58,7 +64,7 @@ namespace School.Core.Services
             {
                 var role = GetRole(user);
 
-                var id = user.StudentId;
+                var id = user.StudentId ?? user.TeacherId;
 
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.Id = id??0;
@@ -71,7 +77,7 @@ namespace School.Core.Services
                 throw new UnauthorizedAccessException("Invalid email or password.");
             }
         }
-
+         
         private string GetRole(User user)
         {
             if (user.TeacherId != null)

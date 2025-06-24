@@ -54,7 +54,7 @@ namespace School.Database.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("Grades");
+                    b.ToTable("Grades", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Group", b =>
@@ -88,7 +88,7 @@ namespace School.Database.Migrations
 
                     b.HasIndex("MajorId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Major", b =>
@@ -114,7 +114,7 @@ namespace School.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Major");
+                    b.ToTable("Major", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Student", b =>
@@ -152,7 +152,7 @@ namespace School.Database.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Subject", b =>
@@ -191,7 +191,7 @@ namespace School.Database.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Teacher", b =>
@@ -224,7 +224,7 @@ namespace School.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.User", b =>
@@ -272,7 +272,7 @@ namespace School.Database.Migrations
                         .IsUnique()
                         .HasFilter("[TeacherId] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("School.Database.Entities.Grade", b =>
